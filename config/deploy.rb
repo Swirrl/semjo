@@ -1,6 +1,15 @@
+require 'bundler/capistrano' # enable bundler stuff!
+
+# rvm stuff
+$:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
+require "rvm/capistrano"                  # Load RVM's capistrano plugin.
+set :rvm_ruby_string, '1.8.7'        # Or whatever env you want it to run in.
+set :rvm_type, :user 
+###
+
 set :application, "semjo"
 
-server "your.server.here", :app, :web, :db, :primary => true
+server "web1.swirrl.com", :app, :web, :db, :primary => true
 
 set(:deploy_to) { File.join("", "home", user, application) }
 
@@ -8,21 +17,21 @@ set :config_files, %w(config.yml)
 
 default_run_options[:pty] = true
 
-set :repository,  "git@github.com:swirrl/semjo.git"
+set :repository,  "https://github.com/Swirrl/semjo.git"
 set :scm, "git"
-set :scm_passphrase, "your-passphrase-here"
-set :user, "rails"
-set :runner, "rails"
-set :use_sudo, false
-
 set :branch, "master"
 
-ssh_options[:port] = 2224
+set :user, "rails"
+set :runner, "rails"
+set :admin_runner, "rails"
+set :use_sudo, false
+
+set :ssh_options, {:forward_agent => true, :port => 2224 }
+
+set :deploy_via, :remote_cache
 
 after "deploy:setup", "deploy:upload_app_config"
-
-after "deploy:symlink", "deploy::symlink_app_config", "deploy:symlink_themes"
-
+after "deploy:symlink", "deploy:symlink_app_config", "deploy:symlink_themes"
 after "deploy:finalize_update", "deploy:update_design_docs" 
 
 namespace :deploy do
@@ -56,7 +65,7 @@ namespace :deploy do
   end
   
   task :update_design_docs do
-    run "rails runner \"CouchRestMigration::update_all_design_docs\" -e production"
+    run "cd #{current_path}; rails runner 'CouchRestMigration::update_all_design_docs' -e production"
   end
   
   desc "Copy local config files from app's config folder to shared_path."
@@ -70,8 +79,12 @@ namespace :deploy do
   end
   
   task :symlink_themes do
-    run "rm -rf #{current_path}/app/views/themes"
-    run "ln -fs #{shared_path}/themes #{current_path}/app/views/"
+    run "rm -rf #{current_path}/app/views/themes/symlinked"
+    run "mkdir #{current_path}/app/views/themes/symlinked"
+    run "ln -fs #{shared_path}/themes/* #{current_path}/app/views/themes/symlinked/"
   end
   
 end
+
+#require 'config/boot'
+#require 'hoptoad_notifier/capistrano'
