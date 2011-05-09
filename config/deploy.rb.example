@@ -4,6 +4,8 @@ server "your.server.here", :app, :web, :db, :primary => true
 
 set(:deploy_to) { File.join("", "home", user, application) }
 
+set :config_files, %w(config.yml)
+
 default_run_options[:pty] = true
 
 set :repository,  "git@github.com:RicSwirrl/semjo.git"
@@ -17,7 +19,11 @@ set :branch, "master"
 
 ssh_options[:port] = 2224
 
-after "deploy:finalize_update", "deploy:update_design_docs"
+after "deploy:setup", "deploy:upload_app_config"
+
+after "deploy:symlink", "deploy::symlink_app_config", "deploy:symlink_themes"
+
+after "deploy:finalize_update", "deploy:update_design_docs" 
 
 namespace :deploy do
   
@@ -49,7 +55,23 @@ namespace :deploy do
     run "touch #{current_path}/tmp/restart.txt"
   end
   
-  task :update_design_docs
+  task :update_design_docs do
     run "rails runner \"CouchRestMigration::update_all_design_docs\" -e production"
   end
+  
+  desc "Copy local config files from app's config folder to shared_path."
+  task :upload_app_config do
+    config_files.each { |filename| put(File.read("config/#{filename}"), "#{shared_path}/#{filename}", :mode => 0640) }
+  end
+
+  desc "Symlink the application's config files specified in :config_files to the latest release"
+  task :symlink_app_config do
+    config_files.each { |filename| run "ln -nfs #{shared_path}/#{filename} #{latest_release}/config/#{filename}" }
+  end
+  
+  task :symlink_themes do
+    run "rm -rf #{current_path}/app/views/themes"
+    run "ln -fs #{shared_path}/themes #{current_path}/app/views/"
+  end
+  
 end

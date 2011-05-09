@@ -1,4 +1,12 @@
 .DS_Store
+
+#all the themes
+app/views/themes/carensk9college
+app/views/themes/learnlinkeddata
+app/views/themes/ricroberts
+app/views/themes/swirrl
+app/views/themes/webofdatablog
+
 config/config.yml
 config/deploy.rb
 log/*.log
