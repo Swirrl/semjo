@@ -1,0 +1,9 @@
+<tr>
+  <td><%= article.title %> </td>
+  <td><%= article.permalink %> </td>
+  <td><%= article.created_at.strftime(Time::DATE_FORMATS[:date_and_time]) %></td>
+  <td><%= article.published_at.strftime(Time::DATE_FORMATS[:date_and_time]) if article.published_at %></td>
+  <td><%= link_to "edit", edit_admin_article_path(article) %></td>
+  <td><%= button_to 'delete', admin_article_path(article), :method => :delete, :confirm => "are you sure?" %></td>
+</tr>
+

@@ -1,0 +1,10 @@
+<h1>Articles</h1>
+
+<%= link_to "create a new article", new_admin_article_path %>
+
+<table>
+  <tr><th>title</th><th>permalink</th><th>created at</th><th>published at</th><th>edit</th><th>delete</th></tr>
+  <% @articles.each do |a| %>
+  	<%= render :partial => 'article', :object => a %>
+  <%end%>
+</table>

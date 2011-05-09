@@ -1,0 +1,8 @@
+<tr>
+  <td><%= page.title %> </td>
+  <td><%= page.permalink %> </td>
+  <td><%= page.created_at.strftime(Time::DATE_FORMATS[:date_and_time]) %></td>
+  <td><%= page.published_at.strftime(Time::DATE_FORMATS[:date_and_time]) if page.published_at%></td>
+  <td><%= link_to "edit", edit_admin_page_path(page) %></td>
+  <td><%= button_to 'delete', admin_page_path(page), :method => :delete, :confirm => "are you sure?" %></td>
+</tr>

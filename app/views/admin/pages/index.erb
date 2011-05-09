@@ -1,0 +1,10 @@
+<h1>Pages</h1>
+
+<%= link_to "create a new page", new_admin_page_path %>
+
+<table>
+  <tr><th>title</th><th>permalink</th><th>created at</th><th>published at</th><th>edit</th><th>delete</th></tr>
+  <% @pages.each do |p| %>
+  	<%= render :partial => 'page', :object => p %>
+  <%end%>
+</table>
