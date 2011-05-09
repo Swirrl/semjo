@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
       
       # For now, this is inside the project folder, but could be somewhere else, and symlinked in.
       prepend_view_path ["#{Rails.root.to_s}/app/views/themes/#{@blog.name}/"]
-    
+      prepend_view_path ["#{Rails.root.to_s}/app/views/themes/symlinked/#{@blog.name}/"]
     end    
     
 end
