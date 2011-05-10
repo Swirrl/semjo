@@ -6,7 +6,7 @@ namespace :semjo do
   task (:create_semjo_db => :environment) do
     couch_server = ENV['COUCH_SERVER'] || "http://127.0.0.1:5984" 
     svr = CouchRest::Server.new(couch_server)   
-    svr.create_db("semanticjournal") 
+    puts "success" if svr.create_db("semanticjournal") 
   end
   
   desc "deletes the semanticjournal 'core' database. USE WITH CARE!!
@@ -37,7 +37,7 @@ namespace :semjo do
     b = Blog.new    
     b.name = blog_name
     b.hosts = [blog_host] if blog_host
-    b.save
+    puts "success" if b.save
     
   end
     
@@ -69,16 +69,19 @@ namespace :semjo do
       acc.email = email
       acc.password = password
       acc.confirm_password = password
-      puts success = acc.save
-      puts acc.errors.inspect unless success
+      
+      puts "error creating account: #{acc.errors.inspect}" unless acc.save
     end
     
-    Thread.current[:blog_db] = blogdb
+    blog = Blog.by_name(:key => blog_name).first
 
-    bu = BlogUser.new
+    bu = blog.blog_users.new
     bu.account = acc.name
-    puts bu.database
-    puts bu.save
+    
+    puts "success!" if bu.save
+    
+    
+    
     
   end
   
