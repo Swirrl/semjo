@@ -5,6 +5,7 @@ require "action_mailer/railtie"
 require "active_resource/railtie"
 require "rails/test_unit/railtie"
 require "action_dispatch/railtie"
+require 'rack/cache'
 
 Bundler.require(:default, Rails.env) if defined?(Bundler)
 
@@ -23,5 +24,6 @@ module Semjo
     config.autoload_paths << File.join(config.root, "lib")
     
     config.time_zone = 'London'
+    
   end
 end

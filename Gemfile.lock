@@ -41,6 +41,7 @@ GEM
       mime-types (~> 1.15)
       railties (~> 3.0.0)
       tzinfo (~> 0.3.22)
+    dalli (1.0.3)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     factory_girl (1.3.3)
@@ -92,6 +93,7 @@ PLATFORMS
 DEPENDENCIES
   RedCloth
   couchrest_model (= 1.1.0.beta5)
+  dalli
   factory_girl_rails
   kaminari
   rack-cache

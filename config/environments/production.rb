@@ -4,8 +4,11 @@ Semjo::Application.configure do
   # only use rack cache in production!
   config.middleware.use Rack::Cache,
     :verbose => true,
-    :metastore   => 'file:tmp/cache/rack/meta',
-    :entitystore => 'file:tmp/cache/rack/body'
+  #  :metastore   => 'file:tmp/cache/rack/meta',
+  #  :entitystore => 'file:tmp/cache/rack/body'
+   :metastore   => 'memcached://localhost:11211/meta',
+   :entitystore => 'memcached://localhost:11211/body'
+
 
   # The production environment is meant for finished, "live" apps.
   # Code is not reloaded between requests
