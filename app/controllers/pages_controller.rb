@@ -2,8 +2,19 @@ class PagesController < ApplicationController
 
   before_filter :get_page_by_permalink, :only => [:show]
   
+  before_filter :get_most_recent_article, :if => proc { |c| @blog.expire_pages_on_article_update }
+  
   def show
-    fresh_when(:last_modified => @page.updated_at, :etag => @page, :public => true) if (APP_CONFIG['caching']) 
+    
+    last_modified = @page.updated_at
+    
+    if @blog.expire_pages_on_article_update && @most_recent_article 
+      if @most_recent_article.updated_at > @page.updated_at
+        last_modified = @most_recent_article.updated_at 
+      end
+    end
+      
+    fresh_when(:last_modified => last_modified, :public => true) 
   end
   
   private

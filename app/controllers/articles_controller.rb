@@ -28,9 +28,7 @@ class ArticlesController < ApplicationController
   
   private
   
-    def get_most_recent_article
-      @most_recent_article = @blog.articles.by_published_at.descending.limit(1).first    
-    end
+
     
     def get_article_by_permalink
       @article = @blog.articles.by_permalink(:key => params[:id]).first    

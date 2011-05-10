@@ -3,11 +3,12 @@ class Blog < CouchRest::Model::Base
   # central db  
   use_database CouchRest::Database.new(CouchRest::Server.new(APP_CONFIG['couch_db_location']), "semanticjournal")
 
-  property :home_path, :default => "/articles"
+  property :home_path, :default => "/articles" #change if you want to use a page as a home page for example
   property :name
   property :hosts
-  property :html5, TrueClass, :default => false
+  property :html5, TrueClass, :default => false #set to true to use html head block (see shared/generic_head partial)
   property :articles_per_page, :default => 8
+  property :expire_pages_on_article_update, :default => false # set to true for blogs where you want pages' cache to expire when articles are updated.
 
   view_by :name 
 

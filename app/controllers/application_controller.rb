@@ -36,4 +36,7 @@ class ApplicationController < ActionController::Base
       prepend_view_path ["#{Rails.root.to_s}/app/views/themes/symlinked/#{@blog.name}/"]
     end    
     
+    def get_most_recent_article
+      @most_recent_article = @blog.articles.by_published_at.descending.limit(1).first    
+    end  
 end
