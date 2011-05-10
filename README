@@ -1,5 +1,12 @@
 This version 2 of SemanticJournal, now shortened to the easier-to-type "Semjo".
 
+New features in version 2:
+* Rails 3 support
+* Now uses latest couchrest_model, taking advantage of some it's great new features (e.g. database proxying).
+* 'Pages' feature
+* Now defaults to memcached for rack-cache store.
+* Support for symlinking the blog themes in from another repo.
+
 Contents of this README file
 ============================
 
@@ -29,7 +36,7 @@ Current Features
 * CouchDB Storage. Each blog has its own CouchDB database.
 * Helpers for marking up elements with RDFa
 * Host multiple blogs using the same rails app
-* Write articles with Textile markup
+* Write articles and pages with Textile markup
 * Design the theme used for each blog, using HTML and ERB
 * Caching, using Rack/Cache
 * Just provides the blog engine only but...
@@ -37,22 +44,18 @@ Current Features
 
 TODOs/Coming soon
 -----------------
-* Smarten up the admin interface.
 * Tagging/Categories for articles.
-* Uploading assets to S3.
-* Add a way to clear the cache for a blog from the admin interface.
-* Finish rights/roles stuff.
-* Add a way to call the design doc reindexing tasks from capistrano (kind of equivalent to deploy:migrations)
-* Better documentation & comments in the code to help others use/modify/contribute.
+* Choice of template for pages.
 
 2. Installing
 =============
 
 2.1 Pre-requisites
 -------------------
-* CouchDB (for storage)
-* Rails ~> 3.0.0
-* the gems in the Gemfile 
+* CouchDB
+* Rails3
+* all the gems in the Gemfile 
+* (optional) memcached for rack-cache storage in production
 
 2.2 Getting Started
 -------------------
@@ -69,15 +72,13 @@ e.g. rake semjo:create_user ACCOUNT_NAME=jim DISPLAY_NAME='jim kirk' PERSONAL_UR
 
 4. Set up an apache virtual host for your blog's domain.  For running in development mode, you'll also need to set up an apache alias and /etc/hosts entry.  (The simplest way to do this is with the "ghost" gem, and the Passenger Pref pane for OS X).
 
-5. Make a new folder in the views/themes folder of the project (at the same level as the ricroberts folder).  Inside that folder, create 2 ERB templates: home.erb and show.erb, for your blog's home page and for individual posts, respectively. (You can use partials to help organise the code).  
+5. Make a new folder in the views/themes folder of the project (at the same level as the ricroberts folder).  Inside that folder, create 2 folders: articles and pages. In articles, create 2 ERB templates: index.erb and show.erb, for your index of articles and for individual posts, respectively. Inside pages, make a template for show.erb, for showing individual pages. (You can use partials to help organise the code).  
 
-* In home.erb, an instance variable called @articles is available which contains a page's worth of articles. At the moment, the @page_size defaults to 8, but you can change it in ArticlesController#home.  There's a helper called "pagination_links" for providing prev/next page links.
+* In articles/index.html.erb, an instance variable called @articles is available which contains a page's worth of articles. At the moment, the @page_size defaults to 8, but you can change it in ArticlesController#home.  There's a helper called "pagination_links" for providing prev/next page links.
+* In articles/show.html.erb, an instance variable called @article is available, which is article being shown.
+* In pages/show.html.erb, an instance variable called @page is available, which is the page being shown.
 
-* In show.erb, an instance variable called @article is available, which is article being shown.
-
-Note: I've included in the repository all the theme templates for my own blog (http://ricroberts.com), in the ricroberts folder, which you can use as a reference or for ideas.  Note: the test, and test2 folders are there for the unit tests and you can safely ignore them unless you're getting stuck into the code.
-
-7. In your web browser, navigate to the host you specified in step 2. If your home.erb template is valid, you'll see your home page.  To log in go to /admin, and enter the email and password you specified in step 3.
+7. In your web browser, navigate to the host you specified in step 2. By default, semjo will redirect you to articles#index (unless you specify a different path in the blogs' home_path property). To log in go to /admin, and enter the email and password you specified in step 3. From there you can create articles or pages.
 
 Happy blogging.
 
@@ -85,9 +86,9 @@ Happy blogging.
 3. Storing Assets
 =================
 
-Right now, SemanticJournal doesn't provide a means for uploading and storing assets for your blog (such as images, CSS, javascript files etc).  I plan to add a user interface for uploading files to S3 soon, but for the moment, you can just manually stick them on S3 (or your preferred file store), and reference those files from your ERB templates.
+Right now, semjo doesn't provide a means for uploading and storing assets for your blog (such as images, CSS, javascript files etc).  I plan to add a user interface for uploading files to S3 soon, but for the moment, you can just manually stick them on S3 (or your preferred file store), and reference those files from your ERB templates.
 
-Note: Tempting as it may be, I recommend that you DON'T just put these kinds of things in the public folder.  This is because if you're hosting several blogs on your SemanticJournal instance, users (including bots) be able to access these public files from any of your blog's urls, leading to confusion (and possibly embarrassment, depending on the different blogs' topics).  You might not want cross-pollination of blog content.
+Note: Tempting as it may be, I recommend that you DON'T just put these kinds of things in the public folder.  This is because if you're hosting several blogs on your semjo instance, users (including bots) be able to access these public files from any of your blog's urls, leading to confusion (and possibly embarrassment, depending on the different blogs' topics).  You might not want cross-pollination of blog content.
 
 
 4. Configuration
@@ -99,37 +100,30 @@ The only configuration you might need to worry about is the location of the Couc
 5. Deployment
 =============
 
-Note: I'm assuming you're running Rails on Passenger.  SemanticJournal is not tested on other systems (e.g. Webrick, Mongrel etc).
+Note: I'm assuming you're running Rails on Passenger.  semjo is not tested on other systems (e.g. Webrick, Mongrel etc).
 
-There's a stub capistrano deploy.rb in the config folder which should get you started.  Points to note:
+There's an example capistrano deploy.rb in the config folder which should get you started. 
 
-* In CouchDB, there's no such thing as migrations, so the deploy:cold task has been overridden not to try to run any migrations. (Don't try to run deploy:migrate, or deploy:migrations - they wont work).
-
-* By default, CouchRest updates all the design docs on a database every time you restart the process (which causes a reindex of that kind of document in the database: a potentially time consuming process). The SemanticJournalCouchRest::DeferUpdateDesignDocsInProduction module that extends all my CouchRest document types prevents this happening in production mode as it's often the case that nothing has changed.  So, if you update your CouchRest document code, you'll need to manually initiate the re-indexing on your production server.  This can be done by using the rake tasks that I've added in the "couchdb" namespace. e.g.
-
-"rake couchdb:refresh_design_docs" will refresh all the design docs on the local server.
-
-Taks a look at lib/tasks/design_docs.rake for other options.
- 
 
 6. Tests
 ========
 
 The default rake task runs all the unit and funcitonal tests, as you'd expect for a Rails project.  (i.e. just run rake).
 
-The tests will create 2 databases: semanticjournal_test and semanticjournal_blog_test.  If these bother you, you can delete them (they will be re-created the next time the tests run).
+The tests will create 2 databases: semjo_test_central and semjo_test_blog.  If these bother you, you can delete them (they will be re-created the next time the tests run).
 
-A couple of the functional tests rely on the test and test2 blog themes existing, but you can delete these in production if you like.
+A couple of the functional tests rely on the semjo_test_blog theme existing, but you can delete it in production if you like.
 
 
 7. Caching
 ==========
 
-SemanticJournal uses Rack/Cache. By default this is set up to create a cache in the tmp/cache folder.  If you're changing code, and things aren't changing in your browser, try deleting this (it will automatically rebuild the cache on subsequent requests).
+Semjo uses Rack/Cache. By default this is set up to use memcached.  If you're changing code, and things aren't changing in your browser, try restarting memcached or turning off caching!
 
 The home page is considered to be stale if the most recently updated article has changed since the last request.
 
-An article is considered to be stale if it has been updated since the last request.
+An article is considered to be stale if it has been updated since the last request. Likewise for an individual page.
+
 
 
 8. Setting the Domain(s) for a blog
@@ -137,7 +131,7 @@ An article is considered to be stale if it has been updated since the last reque
 
 The hosts property of the Blog documents in the semanticjournal CouchDB is an array of all the hosts that correspond to a blog.  
 
-If SemanticJournal receives a request at one of these hosts it will render the blog in whose array it appears.  If that host is not the first item in that blog's hosts array, it will redirect to the first host in the array.  This is that blog's "canonical url".  
+If semjo receives a request at one of these hosts it will render the blog in whose array it appears.  If that host is not the first item in that blog's hosts array, it will redirect to the first host in the array.  This is that blog's "canonical url".  
 
 
 9. How the data is organized
@@ -163,7 +157,12 @@ The semanticjournal database stores 2 types of document:
 10. Themes
 ==========
 
-I've included in the repository all the theme templates for my own blog (http://ricroberts.com), in the views/themes/ricroberts folder.  You can use as a coding reference or for ideas.  Note: the "test", and "test2" folders are there for the unit tests and you can just ignore them (see the "Tests" section of this README).
+Semjo will look for themes in the apps/views/themes folder (and also in themes/symlinked folder). Make a folder with the same name as your blog and add templates for:
+
+* 404.html.erb
+* articles/show.html.erb
+* articles/index.html.erb
+* pages/show.html.erb
 
 10.1 Semantic Helpers
 ---------------------
@@ -178,4 +177,4 @@ In your theme, you can use the helper methods in app/helpers/articles_helper, to
 11. RSS Feed
 ============
 
-SemanticJournal generates a feed of the most recently updated 10 articles at /feed.rss.
+semjo generates a feed of the most recently updated 10 articles at /feed.rss.
