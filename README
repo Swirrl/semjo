@@ -1,18 +1,10 @@
-This version 2 of SemanticJournal, now shortened to the easier-to-type "Semjo".
-
-New features in version 2:
-* Rails 3 support
-* Now uses latest couchrest_model (http://github.com/couchrest/couchrest_model), taking advantage of some its great new features (e.g. database proxying).
-* 'Pages' feature
-* Now defaults to memcached for rack-cache store.
-* Support for symlinking the blog themes in from another repo.
-
-
+> This is version 2 of SemanticJournal, now shortened to the easier-to-type "Semjo".
 
 Contents of this README file
 ============================
 
 1. Overview
+  1.1 Main Features
 2. Installing
   2.1 Pre-requisites
   2.2 Getting Started
@@ -33,16 +25,27 @@ Contents of this README file
 
 SemanticJournal (or "semjo" for short) is a simple Rails-based blog-engine which uses CouchDB for storage.  It includes some Semantic Web features, such as helpers to aid with marking up elements on public-facing pages with RDFa (such as the date, author, title of articles etc).
 
-Current Features
+Main Features
 ----------------
 * CouchDB Storage. Each blog has its own CouchDB database.
 * Helpers for marking up elements with RDFa
 * Host multiple blogs using the same rails app
 * Write articles and pages with Textile markup
-* Design the theme used for each blog, using HTML and ERB
-* Caching, using Rack/Cache
+* Design the theme used for each blog's articles and pages, using HTML and ERB
+* Simple but effective caching, using Rack/Cache
 * Just provides the blog engine only but...
 * Easy to extend with 3rd party plugins (e.g. Disqus for comments, ShareThis for social bookmarking, Google for search etc, Gists for Code/Syntax highlighting, S3 for storing other assets used on your blog).
+
+What's new
+----------
+
+New features in version 2:
+* Rails 3 support
+* Now uses latest couchrest_model (http://github.com/couchrest/couchrest_model), taking advantage of some its great new features (e.g. database proxying).
+* 'Pages' feature: create content that isn't blog articles - e.g. for an 'about' page, or your CV, etc.
+* Now defaults to memcached for rack-cache store.
+* Support for symlinking the blog themes in from another repo.
+
 
 TODOs/Coming soon
 -----------------
@@ -56,6 +59,7 @@ http://ricroberts.com
 http://blog.swirrl.com
 http://learnlinkeddata.com
 http://webofdatablog.com
+
 
 
 2. Installing
