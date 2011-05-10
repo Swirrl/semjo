@@ -7,6 +7,8 @@ New features in version 2:
 * Now defaults to memcached for rack-cache store.
 * Support for symlinking the blog themes in from another repo.
 
+
+
 Contents of this README file
 ============================
 
@@ -47,13 +49,22 @@ TODOs/Coming soon
 * Tagging/Categories for articles.
 * Choice of template for pages.
 
+Examples of blogs running semjo
+-------------------------------
+These blogs are currently running on Semjo:
+http://ricroberts.com
+http://blog.swirrl.com
+http://learnlinkeddata.com
+http://webofdatablog.com
+
+
 2. Installing
 =============
 
 2.1 Pre-requisites
 -------------------
-* CouchDB
-* Rails3
+* CouchDB > 0.10 
+* Rails > 3
 * all the gems in the Gemfile 
 * (optional) memcached for rack-cache storage in production
 
