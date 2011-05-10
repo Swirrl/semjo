@@ -2,7 +2,7 @@ This version 2 of SemanticJournal, now shortened to the easier-to-type "Semjo".
 
 New features in version 2:
 * Rails 3 support
-* Now uses latest couchrest_model, taking advantage of some it's great new features (e.g. database proxying).
+* Now uses latest couchrest_model (http://github.com/couchrest/couchrest_model), taking advantage of some its great new features (e.g. database proxying).
 * 'Pages' feature
 * Now defaults to memcached for rack-cache store.
 * Support for symlinking the blog themes in from another repo.
