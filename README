@@ -5,6 +5,9 @@ Contents of this README file
 
 1. Overview
   1.1 Main Features
+  1.2 What's new?
+  1.3 Coming soon
+  1.4 Example blogs
 2. Installing
   2.1 Pre-requisites
   2.2 Getting Started
@@ -25,8 +28,8 @@ Contents of this README file
 
 SemanticJournal (or "semjo" for short) is a simple Rails-based blog-engine which uses CouchDB for storage.  It includes some Semantic Web features, such as helpers to aid with marking up elements on public-facing pages with RDFa (such as the date, author, title of articles etc).
 
-Main Features
-----------------
+1.1. Main Features
+------------------
 * CouchDB Storage. Each blog has its own CouchDB database.
 * Helpers for marking up elements with RDFa
 * Host multiple blogs using the same rails app
@@ -36,9 +39,8 @@ Main Features
 * Just provides the blog engine only but...
 * Easy to extend with 3rd party plugins (e.g. Disqus for comments, ShareThis for social bookmarking, Google for search etc, Gists for Code/Syntax highlighting, S3 for storing other assets used on your blog).
 
-What's new
-----------
-
+1.2 What's new
+--------------
 New features in version 2:
 * Rails 3 support
 * Now uses latest couchrest_model (http://github.com/couchrest/couchrest_model), taking advantage of some its great new features (e.g. database proxying).
@@ -46,20 +48,18 @@ New features in version 2:
 * Now defaults to memcached for rack-cache store.
 * Support for symlinking the blog themes in from another repo.
 
-
-TODOs/Coming soon
------------------
+1.3 TODOs/Coming soon
+---------------------
 * Tagging/Categories for articles.
 * Choice of template for pages.
 
-Examples of blogs running semjo
--------------------------------
-These blogs are currently running on Semjo:
+1.4 Examples of blogs running semjo
+-----------------------------------
+These blogs are currently running on semjo:
 http://ricroberts.com
 http://blog.swirrl.com
 http://learnlinkeddata.com
 http://webofdatablog.com
-
 
 
 2. Installing
