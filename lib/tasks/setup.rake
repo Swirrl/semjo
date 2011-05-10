@@ -1,7 +1,7 @@
 namespace :semjo do
   
   desc "creates the couch 'core' database
-  e.g. rake couchdb:create_semjo_db COUCH_SERVER='http://127.0.0.1:5984'
+  e.g. rake semjo:create_semjo_db
   Note: COUCH_SERVER is optional and defaults to localhost"
   task (:create_semjo_db => :environment) do
     couch_server = ENV['COUCH_SERVER'] || "http://127.0.0.1:5984" 
@@ -19,9 +19,9 @@ namespace :semjo do
   end
   
   desc "creates a new blog...
-  e.g. rake couchdb:create_new_blog RAILS_ENV=development BLOG_NAME=ricroberts BLOG_HOST=ricroberts.com COUCH_SERVER='http://127.0.0.1:5984' 
+  e.g. rake semjo:create_new_blog BLOG_NAME='jamestkirk' BLOG_HOST='jimkirksblog.com' COUCH_SERVER='http://127.0.0.1:5984'
   Note: BLOG_HOST and COUCH_SERVER are optional. You need to specify the RAILS_ENV so that the blog model knows what server to use for the semanticjournal db
-  Remember: if in dev mode, you'll need to also set up an /etc/hosts entry (with ghost gem)"
+  Remember: if in dev mode, you'll need to also set up an /etc/hosts entry or passenger alias"
   task (:create_new_blog => :environment) do
         
     blog_name = ENV['BLOG_NAME']
@@ -42,8 +42,7 @@ namespace :semjo do
   end
     
   desc "creates an admin user in the specifed blog, with the specified acct name, first_name, last_name, uri, pwd and email
-  e.g. rake couchdb:create_user ACCOUNT_NAME=ric DISPLAY_NAME='ric roberts' PERSONAL_URI='http://swirrl.com/ric.rdf#me' 
-  PASSWORD='pwd1' EMAIL='hello@ricroberts.com' BLOG_NAME='ricroberts' COUCH_SERVER='http://127.0.0.1:5984'
+  e.g. rake semjo:create_user ACCOUNT_NAME=jim DISPLAY_NAME='jim kirk' PERSONAL_URI='http://jimkirksblog.com/me.rdf#me' PASSWORD='pwd1' EMAIL='jamestkirk@starshipenterprise.org' BLOG_NAME='jamestkirk' COUCH_SERVER='http://127.0.0.1:5984'
   Note: COUCH_SERVER defaults to local server"
   task (:create_user => :environment) do
     
