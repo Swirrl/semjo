@@ -2,7 +2,7 @@ class PagesController < ApplicationController
 
   before_filter :get_page_by_permalink, :only => [:show]
   
-  before_filter :get_most_recent_article, :if => proc { |c| @blog.expire_pages_on_article_update }
+  before_filter :get_most_recent_article, :if => proc { |c| @blog && @blog.expire_pages_on_article_update }
   
   def show
     
