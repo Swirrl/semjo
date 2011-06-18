@@ -28,8 +28,6 @@ set :runner, "rails"
 set :admin_runner, "rails"
 set :use_sudo, false
 
-set :deploy_via, :remote_cache
-
 after "deploy:setup", "deploy:upload_app_config"
 after "deploy:symlink", "deploy:symlink_app_config", "deploy:symlink_themes"
 after "deploy:finalize_update", "deploy:update_design_docs" 
