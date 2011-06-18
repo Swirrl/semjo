@@ -16,8 +16,10 @@ set(:deploy_to) { File.join("", "home", user, application) }
 set :config_files, %w(config.yml)
 
 default_run_options[:pty] = true
+ssh_options[:forward_agent] = true
+ssh_options[:port] = 2224
 
-set :repository,  "https://github.com/Swirrl/semjo.git"
+set :repository,  "git@github.com:Swirrl/semjo.git"
 set :scm, "git"
 set :branch, "master"
 
@@ -25,8 +27,6 @@ set :user, "rails"
 set :runner, "rails"
 set :admin_runner, "rails"
 set :use_sudo, false
-
-set :ssh_options, {:forward_agent => true, :port => 2224 }
 
 set :deploy_via, :remote_cache
 
