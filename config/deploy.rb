@@ -3,21 +3,21 @@ require 'bundler/capistrano' # enable bundler stuff!
 # rvm stuff
 $:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
 require "rvm/capistrano"                  # Load RVM's capistrano plugin.
-set :rvm_ruby_string, '1.8.7'        # Or whatever env you want it to run in.
-set :rvm_type, :user 
+set :rvm_ruby_string, '1.9.2'        # Or whatever env you want it to run in.
+set :rvm_type, :user
 ###
 
 set :application, "semjo"
 
-server "web1.swirrl.com", :app, :web, :db, :primary => true
+server "88.198.46.45", :app, :web, :db, :primary => true
 
-set(:deploy_to) { File.join("", "home", user, application) }
+set(:deploy_to) { File.join("", "home", user, "sites", application) }
 
 set :config_files, %w(config.yml)
 
 default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
-ssh_options[:port] = 2224
+ssh_options[:port] = 22
 
 set :repository,  "git@github.com:Swirrl/semjo.git"
 set :scm, "git"
@@ -29,19 +29,19 @@ set :admin_runner, "rails"
 set :use_sudo, false
 
 after "deploy:setup", "deploy:upload_app_config"
-after "deploy:symlink", "deploy:symlink_app_config", "deploy:symlink_themes"
-after "deploy:finalize_update", "deploy:update_design_docs" 
+after "deploy:symlink", "deploy:symlink_app_config", "deploy:symlink_themes", "deploy:update_design_docs"
+# after "deploy:finalize_update",
 
 namespace :deploy do
-  
+
   desc <<-DESC
-    overriding deploy:cold task to not migrate... 
+    overriding deploy:cold task to not migrate...
   DESC
   task :cold do
     update
     start
   end
-    
+
   desc <<-DESC
     overriding start to just call restart
   DESC
@@ -61,11 +61,11 @@ namespace :deploy do
   task :restart do
     run "touch #{current_path}/tmp/restart.txt"
   end
-  
+
   task :update_design_docs do
-    run "cd #{current_path}; rails runner 'CouchRestMigration::update_all_design_docs' -e production"
+    run "cd #{current_path}; bundle exec rails runner 'CouchRestMigration::update_all_design_docs' -e production"
   end
-  
+
   desc "Copy local config files from app's config folder to shared_path."
   task :upload_app_config do
     config_files.each { |filename| put(File.read("config/#{filename}"), "#{shared_path}/#{filename}", :mode => 0640) }
@@ -75,13 +75,13 @@ namespace :deploy do
   task :symlink_app_config do
     config_files.each { |filename| run "ln -nfs #{shared_path}/#{filename} #{latest_release}/config/#{filename}" }
   end
-  
+
   task :symlink_themes do
     run "rm -rf #{current_path}/app/views/themes/symlinked"
     run "mkdir #{current_path}/app/views/themes/symlinked"
     run "ln -fs #{shared_path}/themes/* #{current_path}/app/views/themes/symlinked/"
   end
-  
+
 end
 
 #require 'config/boot'
