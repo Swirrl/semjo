@@ -29,7 +29,7 @@ set :admin_runner, "rails"
 set :use_sudo, false
 
 after "deploy:setup", "deploy:upload_app_config"
-after "deploy:symlink", "deploy:symlink_app_config", "deploy:symlink_themes", "deploy:update_design_docs"
+after "deploy:symlink", "deploy:symlink_app_config", "deploy:symlink_secret_token", "deploy:symlink_themes", "deploy:update_design_docs"
 # after "deploy:finalize_update",
 
 namespace :deploy do
@@ -76,6 +76,10 @@ namespace :deploy do
     config_files.each { |filename| run "ln -nfs #{shared_path}/#{filename} #{latest_release}/config/#{filename}" }
   end
 
+  task :symlink_secret_token do
+    run "ln -nfs #{shared_path}/secret_token.rb #{latest_release}/config/initializers/secret_token.rb"
+  end
+
   task :symlink_themes do
     run "rm -rf #{current_path}/app/views/themes/symlinked"
     run "mkdir #{current_path}/app/views/themes/symlinked"
@@ -84,5 +88,5 @@ namespace :deploy do
 
 end
 
-#require 'config/boot'
+#require './config/boot'
 #require 'hoptoad_notifier/capistrano'
