@@ -3,6 +3,9 @@
 #all the themes
 app/views/themes/symlinked
 
+# local stylesheets
+public/stylesheets/local
+
 config/config.yml
 log/*.log
 tmp/**/*
