@@ -105,7 +105,7 @@ PLATFORMS
 
 DEPENDENCIES
   RedCloth
-  couchrest_model (= 1.1.2)
+  couchrest_model (~> 1.1.2)
   dalli
   factory_girl_rails
   kaminari
