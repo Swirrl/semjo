@@ -14,7 +14,7 @@ class PagesController < ApplicationController
       end
     end
 
-    fresh_when(:last_modified => last_modified, :public => true) if (Rails.env.production?)
+    fresh_when(:last_modified => last_modified, :public => true, :etag => @page) if (Rails.env.production?)
   end
 
   private

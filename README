@@ -67,9 +67,9 @@ http://webofdatablog.com
 
 2.1 Pre-requisites
 -------------------
-* CouchDB > 0.10 
-* Rails > 3
-* all the gems in the Gemfile 
+* CouchDB > 0.10
+* Rails ~> 3.2
+* all the gems in the Gemfile
 * (optional) memcached for rack-cache storage in production
 
 2.2 Getting Started
@@ -87,7 +87,7 @@ e.g. rake semjo:create_user ACCOUNT_NAME=jim DISPLAY_NAME='jim kirk' PERSONAL_UR
 
 4. Set up an apache virtual host for your blog's domain.  For running in development mode, you'll also need to set up an apache alias and /etc/hosts entry.  (The simplest way to do this is with the "ghost" gem, and the Passenger Pref pane for OS X).
 
-5. Make a new folder in the views/themes folder of the project (at the same level as the ricroberts folder).  Inside that folder, create 2 folders: articles and pages. In articles, create 2 ERB templates: index.erb and show.erb, for your index of articles and for individual posts, respectively. Inside pages, make a template for show.erb, for showing individual pages. (You can use partials to help organise the code).  
+5. Make a new folder in the views/themes folder of the project (at the same level as the ricroberts folder).  Inside that folder, create 2 folders: articles and pages. In articles, create 2 ERB templates: index.erb and show.erb, for your index of articles and for individual posts, respectively. Inside pages, make a template for show.erb, for showing individual pages. (You can use partials to help organise the code).
 
 * In articles/index.html.erb, an instance variable called @articles is available which contains a page's worth of articles. At the moment, the @page_size defaults to 8, but you can change it in ArticlesController#home.  There's a helper called "pagination_links" for providing prev/next page links.
 * In articles/show.html.erb, an instance variable called @article is available, which is article being shown.
@@ -117,7 +117,7 @@ The only configuration you might need to worry about is the location of the Couc
 
 Note: I'm assuming you're running Rails on Passenger.  semjo is not tested on other systems (e.g. Webrick, Mongrel etc).
 
-There's an example capistrano deploy.rb in the config folder which should get you started. 
+There's an example capistrano deploy.rb in the config folder which should get you started.
 
 
 6. Tests
@@ -144,9 +144,9 @@ An article is considered to be stale if it has been updated since the last reque
 8. Setting the Domain(s) for a blog
 ===================================
 
-The hosts property of the Blog documents in the semanticjournal CouchDB is an array of all the hosts that correspond to a blog.  
+The hosts property of the Blog documents in the semanticjournal CouchDB is an array of all the hosts that correspond to a blog.
 
-If semjo receives a request at one of these hosts it will render the blog in whose array it appears.  If that host is not the first item in that blog's hosts array, it will redirect to the first host in the array.  This is that blog's "canonical url".  
+If semjo receives a request at one of these hosts it will render the blog in whose array it appears.  If that host is not the first item in that blog's hosts array, it will redirect to the first host in the array.  This is that blog's "canonical url".
 
 
 9. How the data is organized
@@ -164,7 +164,7 @@ The semanticjournal database stores 2 types of document:
 
 9.2 The individual blog databases
 ---------------------------------
-* All the articles for an individual blog are stored in a database with the name of the blog (Article documents).  
+* All the articles for an individual blog are stored in a database with the name of the blog (Article documents).
 
 * This database also stores information about which accounts have access to that blog (BlogUsers).  The BlogUser documents will store the role for that account on this blog (when I get around to coding it - at the moment there's only one role, which can do everything).
 
@@ -198,7 +198,7 @@ semjo generates a feed of the most recently updated 10 articles at /feed.rss.
 12. Licence
 ===========
 
-Semjo is distributed under an MIT licence. 
+Semjo is distributed under an MIT licence.
 
 Copyright (C) 2011 by Swirrl IT Limited
 

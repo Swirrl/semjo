@@ -23,14 +23,18 @@ set :repository,  "git@github.com:Swirrl/semjo.git"
 set :scm, "git"
 set :branch, "master"
 
+set :deploy_via, :remote_cache
+
 set :user, "rails"
 set :runner, "rails"
 set :admin_runner, "rails"
 set :use_sudo, false
 
+
+
 after "deploy:setup", "deploy:upload_app_config"
-after "deploy:symlink", "deploy:symlink_app_config", "deploy:symlink_secret_token", "deploy:symlink_themes", "deploy:update_design_docs"
-# after "deploy:finalize_update",
+after "deploy:finalize_update", "deploy:symlink_app_config", "deploy:symlink_secret_token", "deploy:symlink_themes", "deploy:update_design_docs"
+
 
 namespace :deploy do
 
@@ -60,10 +64,11 @@ namespace :deploy do
   DESC
   task :restart do
     run "touch #{current_path}/tmp/restart.txt"
+    run "sudo echo 'flush_all' | nc localhost 11211" # flush memcached
   end
 
   task :update_design_docs do
-    run "cd #{current_path}; bundle exec rails runner 'CouchRestMigration::update_all_design_docs' -e production"
+    run "cd #{latest_release}; bundle exec rails runner 'CouchRestMigration::update_all_design_docs' -e production"
   end
 
   desc "Copy local config files from app's config folder to shared_path."
@@ -81,12 +86,11 @@ namespace :deploy do
   end
 
   task :symlink_themes do
-    run "rm -rf #{current_path}/app/views/themes/symlinked"
-    run "mkdir #{current_path}/app/views/themes/symlinked"
-    run "ln -fs #{shared_path}/themes/* #{current_path}/app/views/themes/symlinked/"
+    run "rm -rf #{latest_release}/app/views/themes/symlinked"
+    run "mkdir #{latest_release}/app/views/themes/symlinked"
+    run "ln -fs #{shared_path}/themes/* #{latest_release}/app/views/themes/symlinked/"
+    run "touch #{latest_release}/tmp/restart.txt"
+    run "sudo echo 'flush_all' | nc localhost 11211" # flush memcached
   end
 
 end
-
-#require './config/boot'
-#require 'hoptoad_notifier/capistrano'

@@ -1,19 +1,19 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
 class Admin::ArticlesControllerTest < ActionController::TestCase
-  
+
   def setup
-    @blog_user = @blog.blog_users.new(Factory.build(:blog_user))
+    @blog_user = @blog.blog_users.new(FactoryGirl.build(:blog_user))
     @blog_user.save
-    
-    @account = Factory.create(:account)
-    
-    @article = @blog.articles.new(Factory.build(:article))
+
+    @account = FactoryGirl.create(:account)
+
+    @article = @blog.articles.new(FactoryGirl.build(:article))
     @article.save
-    
-    @unpublished_article = @blog.articles.new(Factory.build(:unpublished_article))
+
+    @unpublished_article = @blog.articles.new(FactoryGirl.build(:unpublished_article))
     @unpublished_article.save
-  
+
   end
 
   def test_preview_logged_in
@@ -62,8 +62,8 @@ class Admin::ArticlesControllerTest < ActionController::TestCase
 
   def test_edit_logged_in
     @request.session[:account] = @account.name
-    @request.host = @blog.hosts[0]    
-    get :edit, :id => @article.permalink  
+    @request.host = @blog.hosts[0]
+    get :edit, :id => @article.permalink
     assert_response :success
     assert assigns["article"]
   end
@@ -93,7 +93,7 @@ class Admin::ArticlesControllerTest < ActionController::TestCase
   def test_create_logged_in
     @request.session[:account] = @account.name
     @request.host = @blog.hosts[0]
-    post :create, :article => {:title => Factory.build(:article_with_unusual_chars).title, :content => "contento", :is_published => "true"}
+    post :create, :article => {:title => FactoryGirl.build(:article_with_unusual_chars).title, :content => "contento", :is_published => "true"}
     assert_response :redirect
     assert_redirected_to :action => "edit", :id => "this-is-a-title-456"
   end

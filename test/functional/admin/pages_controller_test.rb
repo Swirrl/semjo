@@ -1,17 +1,17 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
 class Admin::PagesControllerTest < ActionController::TestCase
-  
+
   def setup
-    @blog_user = @blog.blog_users.new(Factory.build(:blog_user))
+    @blog_user = @blog.blog_users.new(FactoryGirl.build(:blog_user))
     @blog_user.save
-    
-    @account = Factory.create(:account)
-    
-    @page = @blog.pages.new(Factory.build(:page))
+
+    @account = FactoryGirl.create(:account)
+
+    @page = @blog.pages.new(FactoryGirl.build(:page))
     @page.save
-    
-    @unpublished_page = @blog.pages.new(Factory.build(:unpublished_page))
+
+    @unpublished_page = @blog.pages.new(FactoryGirl.build(:unpublished_page))
     @unpublished_page.save
   end
 
@@ -61,8 +61,8 @@ class Admin::PagesControllerTest < ActionController::TestCase
 
   def test_edit_logged_in
     @request.session[:account] = @account.name
-    @request.host = @blog.hosts[0]    
-    get :edit, :id => @page.permalink  
+    @request.host = @blog.hosts[0]
+    get :edit, :id => @page.permalink
     assert_response :success
     assert assigns["page"]
   end
@@ -92,7 +92,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
   def test_create_logged_in
     @request.session[:account] = @account.name
     @request.host = @blog.hosts[0]
-    post :create, :page => {:title => Factory.build(:page_with_unusual_chars).title, :content => "contento", :is_published => "true"}
+    post :create, :page => {:title => FactoryGirl.build(:page_with_unusual_chars).title, :content => "contento", :is_published => "true"}
     assert_response :redirect
     assert_redirected_to :action => "edit", :id => "this-is-a-title-456"
   end
