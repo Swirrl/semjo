@@ -5,6 +5,7 @@ app/views/themes/symlinked
 
 # local stylesheets
 public/stylesheets/local
+public/theme_assets/
 
 config/config.yml
 log/*.log
