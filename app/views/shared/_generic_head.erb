@@ -1,17 +1,24 @@
 <% if @blog && @blog.html5? -%>
+
+<% namespaces =
+  'xmlns:dc="http://purl.org/dc/terms/"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+   xmlns:cc="http://creativecommons.org/ns#"
+  ' %>
+
 <!DOCTYPE html>
-  <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ --> 
-  <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
-  <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
-  <!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
-  <!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-  <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->    
+  <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+  <!--[if lt IE 7 ]> <html <%= raw(namespaces) %> lang="en" class="no-js ie6"> <![endif]-->
+  <!--[if IE 7 ]>    <html <%= raw(namespaces) %> lang="en" class="no-js ie7"> <![endif]-->
+  <!--[if IE 8 ]>    <html <%= raw(namespaces) %> lang="en" class="no-js ie8"> <![endif]-->
+  <!--[if IE 9 ]>    <html <%= raw(namespaces) %> lang="en" class="no-js ie9"> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js" <%= raw(namespaces) %>> <!--<![endif]-->
    <head>
      <meta charset="utf-8" />
 <% else -%>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
-  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" <%= raw(namespaces) %>>
     <head>
       <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 <% end -%>
