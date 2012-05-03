@@ -33,7 +33,7 @@ set :use_sudo, false
 
 
 after "deploy:setup", "deploy:upload_app_config"
-after "deploy:finalize_update", "deploy:symlink_app_config", "deploy:symlink_secret_token", "deploy:symlink_themes", "deploy:update_design_docs"
+after "deploy:finalize_update", "deploy:symlink_app_config", "deploy:symlink_secret_token", "deploy:symlink_themes", "deploy:symlink_assets", "deploy:update_design_docs"
 
 
 namespace :deploy do
@@ -87,10 +87,19 @@ namespace :deploy do
 
   task :symlink_themes do
     run "rm -rf #{latest_release}/app/views/themes/symlinked"
-    run "mkdir #{latest_release}/app/views/themes/symlinked"
+    run "mkdir -p #{latest_release}/app/views/themes/symlinked/"
     run "ln -fs #{shared_path}/themes/* #{latest_release}/app/views/themes/symlinked/"
     run "touch #{latest_release}/tmp/restart.txt"
     run "sudo echo 'flush_all' | nc localhost 11211" # flush memcached
   end
+
+  task :symlink_assets do
+    run "rm -rf #{latest_release}/public/theme_assets"
+    run "mkdir -p #{latest_release}/public/theme_assets/"
+    run "ln -fs #{shared_path}/assets/* #{latest_release}/public/theme_assets/"
+    run "touch #{latest_release}/tmp/restart.txt"
+    run "sudo echo 'flush_all' | nc localhost 11211" # flush memcached
+  end
+
 
 end
